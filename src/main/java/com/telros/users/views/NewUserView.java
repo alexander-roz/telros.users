@@ -2,6 +2,7 @@ package com.telros.users.views;
 
 import com.telros.users.data.entities.UserEntity;
 import com.telros.users.data.entities.UserEntityRole;
+import com.telros.users.services.RegexService;
 import com.telros.users.services.UserService;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -22,16 +23,21 @@ import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import jakarta.annotation.security.RolesAllowed;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 
 @PageTitle("New user")
-@Route(value = "person", layout = MainLayout.class)
+@Route(value = "newUser", layout = MainLayout.class)
 @Uses(Icon.class)
-//@RolesAllowed("ADMIN")
+@RolesAllowed("ADMIN")
 public class NewUserView extends Composite<VerticalLayout> {
-    UserService userService;
+    private UserService userService;
     private TextField login;
     private TextField password;
     private TextField name;
@@ -41,6 +47,7 @@ public class NewUserView extends Composite<VerticalLayout> {
     private TextField phone;
     private EmailField email;
     private Upload photo;
+    private String photoLink;
     private Checkbox role;
 
 
@@ -50,12 +57,15 @@ public class NewUserView extends Composite<VerticalLayout> {
                         "Обязательные поля: логин, пароль, имя, фамилия");
         notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
         notification.setDuration(10000);
+
         this.userService = userService;
+
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setWidth("100%");
         verticalLayout.setMaxWidth("800px");
         verticalLayout.setHeight("min-content");
 
+        //разметка слоя для добавления функциональных элементов
         HorizontalLayout line = new HorizontalLayout();
         line.setPadding(true);
         line.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -72,12 +82,12 @@ public class NewUserView extends Composite<VerticalLayout> {
         line3.setPadding(true);
         line3.setAlignItems(FlexComponent.Alignment.CENTER);
 
-
         verticalLayout.add(line);
         verticalLayout.add(line1);
         verticalLayout.add(line2);
         verticalLayout.add(line3);
 
+        //добавление элементов для внесения данных нового пользователя
         login = new TextField();
         login.setLabel("Логин");
         password = new TextField();
@@ -92,7 +102,6 @@ public class NewUserView extends Composite<VerticalLayout> {
         birthday = new DatePicker("Дата рождения");
         phone = new TextField();
         phone.setLabel("Телефон");
-
         email = new EmailField();
         email.setLabel("Email");
         email.getElement().setAttribute("name", "email");
@@ -100,15 +109,31 @@ public class NewUserView extends Composite<VerticalLayout> {
         email.setClearButtonVisible(true);
         email.setInvalid(true);
 
+        //Получение загружаемого через форму изображения.
+        //Хранение в базе данных предполагается в формате ссылки,
+        // с возможностью дальнейшего получения по ссылке и использования на странице сайта
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         photo = new Upload(buffer);
         photo.addSucceededListener(event -> {
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream(fileName);
 
-            // Do something with the file data
-            // processFile(inputStream, fileName);
+            File targetFile = new File("src/main/resources/img/"+fileName);
+
+            try {
+                Files.copy(
+                        inputStream,
+                        targetFile.toPath(),
+                        StandardCopyOption.REPLACE_EXISTING);
+                inputStream.close();
+                photoLink = targetFile.getPath();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
+        //Устанавливается наличие прав доступа.
+        //Пользователь с правами доступа USER не может получить доступ ко всему списку пользователей,
+        //а также доступ к странице с добавлением нового
         role = new Checkbox();
         role.setLabel("Права администратора");
 
@@ -122,6 +147,8 @@ public class NewUserView extends Composite<VerticalLayout> {
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         layoutRow.add(saveButton);
 
+        //Событие при нажатии saveButton -
+        // получение внесенных данных формы и сохранение в БД методом saveThePerson()
         saveButton.addClickListener(clickEvent -> {
             saveThePerson(login.getValue(),
                     password.getValue(),
@@ -131,6 +158,7 @@ public class NewUserView extends Composite<VerticalLayout> {
                     birthday.getValue(),
                     phone.getValue(),
                     email.getValue(),
+                    photoLink,
                     role.getValue());
         });
 
@@ -154,6 +182,7 @@ public class NewUserView extends Composite<VerticalLayout> {
         verticalLayout.add(layoutRow);
     }
 
+    //Метод сохранения полученных данных формы, с проверкой внесенных данных
     private void saveThePerson(String login,
                                String password,
                                String name,
@@ -162,9 +191,9 @@ public class NewUserView extends Composite<VerticalLayout> {
                                LocalDate birthday,
                                String phone,
                                String email,
+                               String photo,
                                boolean role){
         UserEntity user = new UserEntity();
-
         if(login.isEmpty()||password.isEmpty()&&name.isEmpty()&&surname.isEmpty()) {
             Notification notification = Notification
                     .show("Заполните данные: логин, пароль, имя, фамилия");
@@ -177,13 +206,22 @@ public class NewUserView extends Composite<VerticalLayout> {
             user.setMiddleName(midName);
             user.setSurname(surname);
             user.setBirthday(birthday);
-            user.setPhone(phone);
+            if(RegexService.phoneNumberRefactor(phone).equals("Неверный формат номера")){
+                Notification notification = Notification
+                        .show("Введен неверный формат номера телефона");
+                notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+            }else {
+                user.setPhone(RegexService.phoneNumberRefactor(phone));
+            }
+
             user.setEmail(email);
+            user.setPhoto(photo);
+
             if(!role){
                 user.setRole(UserEntityRole.USER);
             }
             else {
-                user.setRole(UserEntityRole.ADMINISTRATOR);
+                user.setRole(UserEntityRole.ADMIN);
             }
             if (userService.checkTheLogin(user)) {
                 Notification notification = Notification
