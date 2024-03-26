@@ -150,16 +150,16 @@ public class NewUserView extends Composite<VerticalLayout> {
         //Событие при нажатии saveButton -
         // получение внесенных данных формы и сохранение в БД методом saveThePerson()
         saveButton.addClickListener(clickEvent -> {
-            saveThePerson(login.getValue(),
-                    password.getValue(),
-                    name.getValue(),
-                    midName.getValue(),
-                    surname.getValue(),
-                    birthday.getValue(),
-                    phone.getValue(),
-                    email.getValue(),
-                    photoLink,
-                    role.getValue());
+                saveThePerson(login.getValue(),
+                        password.getValue(),
+                        name.getValue(),
+                        midName.getValue(),
+                        surname.getValue(),
+                        birthday.getValue(),
+                        phone.getValue(),
+                        email.getValue(),
+                        photoLink,
+                        role.getValue());
         });
 
         getContent().setWidth("100%");
@@ -194,7 +194,7 @@ public class NewUserView extends Composite<VerticalLayout> {
                                String photo,
                                boolean role){
         UserEntity user = new UserEntity();
-        if(login.isEmpty()||password.isEmpty()&&name.isEmpty()&&surname.isEmpty()) {
+        if(login.isEmpty()||password.isEmpty()||name.isEmpty()||surname.isEmpty()) {
             Notification notification = Notification
                     .show("Заполните данные: логин, пароль, имя, фамилия");
             notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
