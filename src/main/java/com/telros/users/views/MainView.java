@@ -2,8 +2,8 @@ package com.telros.users.views;
 
 import com.telros.users.data.entities.UserEntity;
 import com.telros.users.data.entities.UserEntityRole;
-import com.telros.users.services.SecurityService;
-import com.telros.users.services.UserService;
+import com.telros.users.security.SecurityService;
+import com.telros.users.services.impl.UserServiceImpl;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,24 +15,23 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.StreamResource;
-import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
 
 import java.util.List;
 
 @PageTitle("Users")
 @Route(value = "users", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
 @Uses(Icon.class)
-@RolesAllowed({"ADMIN", "USER"})
-public class AdminView extends Div {
+@PermitAll
+//@RolesAllowed({"ADMIN", "USER"})
+public class MainView extends Div {
 
-    private Grid<UserEntity> grid;
-    private final UserService userService;
+    private UserServiceImpl userService;
     private SecurityService securityService;
 
-    public AdminView(UserService userService, SecurityService securityService) {
+    public MainView(UserServiceImpl userService,
+                    SecurityService securityService) {
         this.userService = userService;
         this.securityService = securityService;
         setSizeFull();
@@ -47,7 +46,7 @@ public class AdminView extends Div {
 
     private Component createGrid() {
 
-        grid = new Grid<>(UserEntity.class, false);
+        Grid<UserEntity> grid = new Grid<>(UserEntity.class, false);
         grid.addColumn(UserEntity::getId).setHeader("ID").setSortable(true);
         grid.addColumn(UserEntity::getLogin).setHeader("Логин").setSortable(true);
         grid.addColumn(UserEntity::getPassword).setHeader("Пароль").setSortable(true);

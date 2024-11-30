@@ -1,6 +1,6 @@
 package com.telros.users.views;
 
-import com.telros.users.services.SecurityService;
+import com.telros.users.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -12,21 +12,22 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 //Основной слой приложения
+@PermitAll
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
-    private SecurityService securityService;
     private final transient AuthenticationContext authContext;
+    private SecurityService securityService;
 
 
-    public MainLayout(@Autowired SecurityService securityService,
+    public MainLayout(SecurityService securityService,
                       AuthenticationContext authContext) {
-
+        this.securityService = securityService;
         this.authContext = authContext;
 
         H1 logo = new H1("Telros users");
@@ -40,8 +41,6 @@ public class MainLayout extends AppLayout {
                             Span loggedUser = new Span("Welcome " + user.getUsername());
                             return new HorizontalLayout(logo, loggedUser, logout);
                         }).orElseGet(() -> new HorizontalLayout(logo));
-
-        this.securityService = securityService;
 
         addToNavbar(header);
         setPrimarySection(Section.DRAWER);
@@ -73,7 +72,7 @@ public class MainLayout extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Users", AdminView.class, LineAwesomeIcon.FILTER_SOLID.create()));
+        nav.addItem(new SideNavItem("Users", MainView.class, LineAwesomeIcon.FILTER_SOLID.create()));
         nav.addItem(new SideNavItem("New user", NewUserView.class, LineAwesomeIcon.USER.create()));
         return nav;
     }

@@ -7,7 +7,7 @@
 #    ports:
 #      - '5432:5432'
 #    environment:
-#      - 'POSTGRES_USER=sa'
-#      - 'POSTGRES_PASSWORD=1234'
+#      - 'POSTGRES_USER=postgres'
+#      - 'POSTGRES_PASSWORD=ipDbP@$$w0rdd_1231'
 #      - 'POSTGRES_HOST_AUTH_METHOD=trust'
 #      - 'POSTGRES_DB=users_list'

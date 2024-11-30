@@ -1,6 +1,14 @@
 package com.telros.users.data.entities;
 
-public enum UserEntityRole {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum UserEntityRole implements GrantedAuthority {
     ADMIN,
-    USER
+    USER;
+
+    @Override
+    public String getAuthority() {
+        System.out.println("> method getAuthority started and returned: " + name());
+        return name();
+    }
 }

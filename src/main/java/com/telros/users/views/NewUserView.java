@@ -23,6 +23,7 @@ import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.io.File;
@@ -35,7 +36,8 @@ import java.time.LocalDate;
 @PageTitle("New user")
 @Route(value = "newUser", layout = MainLayout.class)
 @Uses(Icon.class)
-@RolesAllowed("ADMIN")
+@PermitAll
+//@RolesAllowed("ADMIN")
 public class NewUserView extends Composite<VerticalLayout> {
     private UserService userService;
     private TextField login;
@@ -201,7 +203,7 @@ public class NewUserView extends Composite<VerticalLayout> {
         }
         else {
             user.setLogin(login);
-            user.setPassword(password);
+            user.setPassword("{noop}" + password);
             user.setName(name);
             user.setMiddleName(midName);
             user.setSurname(surname);

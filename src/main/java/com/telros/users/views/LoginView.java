@@ -9,13 +9,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-//Вид формы аутентификации
 @PageTitle("Authentication")
 @Route(value = "login")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     private final LoginForm login = new LoginForm();
     public LoginView(){
+        System.out.println("> LoginView constructor started");
         addClassName("login-view");
         setSizeFull();
         setAlignItems(Alignment.CENTER);
@@ -25,6 +25,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     }
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        System.out.println("> class LoginView, beforeEnter method started");
         if(beforeEnterEvent.getLocation()
                 .getQueryParameters()
                 .getParameters()

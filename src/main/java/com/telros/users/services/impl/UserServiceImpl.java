@@ -4,16 +4,19 @@ import com.telros.users.dto.Request;
 import com.telros.users.data.entities.UserEntity;
 import com.telros.users.data.repositories.UserEntityRepository;
 import com.telros.users.services.UserService;
+import com.vaadin.flow.component.notification.Notification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserEntityRepository userEntityRepository;
 
     public UserServiceImpl(UserEntityRepository userEntityRepository) {
@@ -21,34 +24,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long addUser(UserEntity user) {
+    public void addUser(UserEntity user) {
         userEntityRepository.save(user);
-        return user.getId();
     }
 
     @Override
     public boolean checkTheLogin(UserEntity addingUser){
         boolean found = false;
         for (UserEntity user:userEntityRepository.findAll()){
-            if (user.getLogin().equalsIgnoreCase(addingUser.getLogin())){
+            if (user.getLogin().equalsIgnoreCase(addingUser.getLogin())) {
                 found = true;
+                break;
             }
         }
         return found;
     }
 
-    @Override
-    public UserEntity findUserByLogin(String login){
-        UserEntity userEntity = new UserEntity();
-        for (UserEntity user:userEntityRepository.findAll()){
-            if (user.getLogin().equalsIgnoreCase(login)){
-                userEntity = user;
-            }
-        }
-        return userEntity;
-    }
-
-    @Override
     public Request deleteUser(UserEntity user) {
         if (userEntityRepository.existsById(user.getId())) {
             userEntityRepository.delete(user);
@@ -59,38 +50,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Request deleteAllUsers() {
-        userEntityRepository.deleteAll();
-        if (userEntityRepository.findAll().isEmpty()) {
-            return new Request(true);
-        } else {
-            return new Request(false, "Users were not deleted");
-        }
-    }
-
-    @Override
     public List<UserEntity> findAllUsers() {
         return userEntityRepository.findAll();
     }
 
-    @Override
-    public Optional<UserEntity> getUserByID(long id) {
-        return userEntityRepository.findById(id);
+    public Page<UserEntity> list(Pageable pageable) {
+        return userEntityRepository.findAll(pageable);
     }
 
     @Override
-    public UserEntity findUserByName(String name) {
+    public UserEntity findUserByLogin(String login) {
         UserEntity userEntity = null;
-        for(UserEntity user:userEntityRepository.findAll()){
-            if(user.getName().equalsIgnoreCase(name)){
+        for (UserEntity user:userEntityRepository.findAll()){
+            if (user.getLogin().equalsIgnoreCase(login)) {
                 userEntity = user;
+                break;
             }
         }
         return userEntity;
-    }
-
-    public Page<UserEntity> list(Pageable pageable) {
-        return userEntityRepository.findAll(pageable);
     }
 
     public Page<UserEntity> list(Pageable pageable, Specification<UserEntity> filter) {
@@ -101,10 +78,31 @@ public class UserServiceImpl implements UserService {
     public boolean checkTheUser(String name) {
         boolean found = false;
         for (UserEntity user:userEntityRepository.findAll()){
-            if (user.getName().equalsIgnoreCase(name)){
+            if (user.getName().equalsIgnoreCase(name)) {
                 found = true;
+                break;
             }
         }
         return found;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("> method loadUserByUsername, class UserServiceImpl started with user: " + username);
+        UserEntity userEntity = userEntityRepository.findUserEntityByLogin(username);
+        UserDetails loadedUser;
+        if(userEntity != null){
+            loadedUser = userEntity;
+
+            System.out.println("> method loadUserByUsername found: \n"
+                    + loadedUser.getUsername() + "\n"
+                    + loadedUser.getPassword() + "\n"
+                    + loadedUser.getAuthorities());
+        }
+        else{
+            Notification.show("There is no user with login " + username + " found");
+            loadedUser = null;
+        }
+        return (UserDetails) loadedUser;
     }
 }

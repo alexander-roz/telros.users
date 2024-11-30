@@ -1,4 +1,4 @@
-package com.telros.users.services;
+package com.telros.users.security;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinServletRequest;
@@ -17,9 +17,12 @@ public class SecurityService {
         SecurityContext context = SecurityContextHolder.getContext();
         Object principal = context.getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
+            System.out.println("> class SecurityService method getAuthenticatedUser returns: "
+                    + (UserDetails) context.getAuthentication().getPrincipal());
             return (UserDetails) context.getAuthentication().getPrincipal();
         }
         // Anonymous or no authentication.
+        System.out.println("> class SecurityService method getAuthenticatedUser returns null");
         return null;
     }
 
