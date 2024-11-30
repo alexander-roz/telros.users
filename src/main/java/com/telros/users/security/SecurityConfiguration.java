@@ -39,10 +39,10 @@ public class SecurityConfiguration
                                 new AntPathRequestMatcher("/login"))
                         .permitAll()
                         .requestMatchers(
-                                new AntPathRequestMatcher("/users/**"))
-                        .hasAnyAuthority("ADMIN", "USER")
-                        .requestMatchers(new AntPathRequestMatcher("/newUser/**"))
-                        .hasAuthority("ADMIN"));
+                                new AntPathRequestMatcher("/users"))
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers(new AntPathRequestMatcher("/newUser"))
+                        .hasAuthority("ROLE_ADMIN"));
 
         super.configure(http);
         setLoginView(http, LoginView.class);
@@ -69,7 +69,7 @@ public class SecurityConfiguration
         UserEntity admin = new UserEntity();
         admin.setLogin("admin");
         admin.setPassword("{noop}pass");
-        admin.setRole(UserEntityRole.ADMIN);
+        admin.setRole(UserEntityRole.ROLE_ADMIN);
         admin.setName("Admin");
         admin.setSurname("Admin");
         userService.addUser(admin);

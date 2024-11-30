@@ -10,8 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 @Entity
 @Data
@@ -58,8 +57,12 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println("> method getAuthorities started with user: " + login + " role: " + role.name());
-        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
+        System.out.println("> method getAuthorities started with user: "
+                + Collections.singleton(new SimpleGrantedAuthority(role.name())));
+
+        List<UserEntityRole> roles = new ArrayList<>();
+        roles.add(getRole());
+        return roles;
     }
 
     @Override

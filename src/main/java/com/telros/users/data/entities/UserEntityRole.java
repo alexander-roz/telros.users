@@ -3,8 +3,8 @@ package com.telros.users.data.entities;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum UserEntityRole implements GrantedAuthority {
-    ADMIN,
-    USER;
+    ROLE_ADMIN,
+    ROLE_USER;
 
     @Override
     public String getAuthority() {

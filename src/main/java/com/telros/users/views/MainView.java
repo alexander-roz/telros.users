@@ -24,7 +24,6 @@ import java.util.List;
 @Route(value = "users", layout = MainLayout.class)
 @Uses(Icon.class)
 @PermitAll
-//@RolesAllowed({"ADMIN", "USER"})
 public class MainView extends Div {
 
     private UserServiceImpl userService;
@@ -66,7 +65,7 @@ public class MainView extends Div {
         notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
         notification.setDuration(10000);
 
-        if(user.getRole().equals(UserEntityRole.ADMIN)){
+        if(user.getRole().equals(UserEntityRole.ROLE_ADMIN)){
             List<UserEntity> users = userService.findAllUsers();
             grid.setItems(users);
         }
