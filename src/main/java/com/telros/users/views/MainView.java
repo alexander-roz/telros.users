@@ -16,14 +16,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 import java.util.List;
 
 @PageTitle("Users")
 @Route(value = "users", layout = MainLayout.class)
 @Uses(Icon.class)
-@PermitAll
+@RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
 public class MainView extends Div {
 
     private UserServiceImpl userService;
@@ -34,7 +34,7 @@ public class MainView extends Div {
         this.userService = userService;
         this.securityService = securityService;
         setSizeFull();
-        addClassNames("admin-view");
+        addClassNames("users-view");
 
         VerticalLayout layout = new VerticalLayout(createGrid());
         layout.setSizeFull();

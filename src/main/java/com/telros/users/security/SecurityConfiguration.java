@@ -11,10 +11,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -33,16 +35,24 @@ public class SecurityConfiguration
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth ->
+        http
+                .formLogin(new Customizer<FormLoginConfigurer<HttpSecurity>>() {
+                    @Override
+                    public void customize(FormLoginConfigurer<HttpSecurity> httpSecurityFormLoginConfigurer) {
+                        httpSecurityFormLoginConfigurer.loginPage("/login");
+                        httpSecurityFormLoginConfigurer.defaultSuccessUrl("/users", true);
+                        httpSecurityFormLoginConfigurer.failureForwardUrl("/login");
+                    }
+                })
+                .authorizeHttpRequests(auth ->
                 auth
                         .requestMatchers(
-                                new AntPathRequestMatcher("/login"))
-                        .permitAll()
+                                new AntPathRequestMatcher("/login")).permitAll()
                         .requestMatchers(
-                                new AntPathRequestMatcher("/users"))
-                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers(new AntPathRequestMatcher("/newUser"))
-                        .hasAuthority("ROLE_ADMIN"));
+                                new AntPathRequestMatcher("/users")).hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/newUser")).hasAuthority("ROLE_ADMIN")
+                );
 
         super.configure(http);
         setLoginView(http, LoginView.class);

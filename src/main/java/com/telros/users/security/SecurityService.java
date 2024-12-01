@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityService {
 
-    private static final String LOGOUT_SUCCESS_URL = "/";
+    private static final String LOGOUT_SUCCESS_URL = "/login";
 
     public UserDetails getAuthenticatedUser() {
         SecurityContext context = SecurityContextHolder.getContext();

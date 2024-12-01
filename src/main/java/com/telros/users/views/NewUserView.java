@@ -35,7 +35,6 @@ import java.time.LocalDate;
 @PageTitle("New user")
 @Route(value = "newUser", layout = MainLayout.class)
 @Uses(Icon.class)
-//@PermitAll
 @RolesAllowed("ROLE_ADMIN")
 public class NewUserView extends Composite<VerticalLayout> {
     private UserService userService;
@@ -54,7 +53,7 @@ public class NewUserView extends Composite<VerticalLayout> {
 
     public NewUserView(UserService userService) {
         Notification notification = Notification
-                .show("Для добавления пользователя - заполните данные. " +
+                .show("Для добавления пользователя - заполните данные. \n" +
                         "Обязательные поля: логин, пароль, имя, фамилия");
         notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
         notification.setDuration(10000);
