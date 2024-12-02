@@ -9,10 +9,10 @@
 #### Вход от имени администратора
 ![1  login form](https://github.com/user-attachments/assets/94a0c5d4-581c-4970-b5e3-74a85ecf4fce)
 #### Отображение списка пользователей
-![2  users view](https://github.com/user-attachments/assets/8939a034-7696-4100-98cd-a31fcf65313a)
+![2 userslist](https://github.com/user-attachments/assets/83ad8adf-7767-4235-826a-4d66f424e79f)
 #### Добавление нового пользователя с правами USER
-![3  newuserview](https://github.com/user-attachments/assets/76ffe6d9-343f-4c4a-b54c-f489502144f5)
+![3 newuser](https://github.com/user-attachments/assets/f2bed8f6-db2a-4a42-b568-5de5caa1cf38)
 #### Отображение списка пользователей с учетом внесенного
-![4  addedJack](https://github.com/user-attachments/assets/d1ae11c3-13b4-4f96-b007-e0862689bd9a)
+![4 newoneadded](https://github.com/user-attachments/assets/8a5638c2-81de-4ec8-8d1d-9d3dcb02fc91)
 #### вход от имени нового пользователя с правами USER
-![5  userlogin](https://github.com/user-attachments/assets/79f3ebba-675a-468b-a779-cdf3c54f0a64)
+![5 newoneentered](https://github.com/user-attachments/assets/16f42c64-4fa2-41e2-a3f0-342b6c6719f5)
