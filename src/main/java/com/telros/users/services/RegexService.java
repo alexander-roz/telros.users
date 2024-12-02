@@ -2,6 +2,7 @@ package com.telros.users.services;
 
 public class RegexService {
 
+    //рефакторинг и проверка формата номера телефона
     public static String phoneNumberRefactor(String input) {
         String regex = "\\D";
         String regexFormat = "[7,8]\\d{10}";

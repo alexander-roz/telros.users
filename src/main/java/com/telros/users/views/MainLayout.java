@@ -23,7 +23,7 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import static com.telros.users.views.LoginView.notificationCounter;
 
-//Основной слой приложения
+//класс Vaadin, формирующий основной слой приложения
 @Route(value = "")
 @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
 public class MainLayout extends AppLayout {

@@ -27,6 +27,7 @@ import jakarta.annotation.security.RolesAllowed;
 
 import java.util.List;
 
+//класс Vaadin вкладки списка пользователей
 @PageTitle("Users")
 @Route(value = "users", layout = MainLayout.class)
 @Uses(Icon.class)

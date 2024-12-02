@@ -21,7 +21,6 @@ public class SecurityService {
                     + (UserDetails) context.getAuthentication().getPrincipal());
             return (UserDetails) context.getAuthentication().getPrincipal();
         }
-        // Anonymous or no authentication.
         System.out.println("> class SecurityService method getAuthenticatedUser returns null");
         return null;
     }

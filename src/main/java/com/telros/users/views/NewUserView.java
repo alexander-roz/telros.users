@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 
+//класс Vaadin вкладки добавления нового пользователя
 @PageTitle("New user")
 @Route(value = "newUser", layout = MainLayout.class)
 @Uses(Icon.class)

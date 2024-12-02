@@ -7,6 +7,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 
+//класс Vaadin для Login формы
 @PageTitle("Authentication")
 @Route(value = "login")
 @AnonymousAllowed

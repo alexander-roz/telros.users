@@ -87,6 +87,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return found;
     }
 
+    //метод для поиска пользователя в БД и сопоставления с данными UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("> method loadUserByUsername, class UserServiceImpl started with user: " + username);

@@ -48,10 +48,13 @@ public class SecurityConfiguration
                 .authorizeHttpRequests(auth ->
                 auth
                         .requestMatchers(
+                                //установка прав доступа к Login форме
                                 new AntPathRequestMatcher("/login")).permitAll()
                         .requestMatchers(
+                                //установка прав доступа к странице списка пользователей
                                 new AntPathRequestMatcher("/users")).hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                         .requestMatchers(
+                                //установка прав доступа к странице добавления пользователя
                                 new AntPathRequestMatcher("/newUser")).hasAuthority("ROLE_ADMIN")
                 );
 
@@ -61,7 +64,6 @@ public class SecurityConfiguration
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // Customize your WebSecurity configuration.
         super.configure(web);
     }
     @Bean
@@ -77,6 +79,7 @@ public class SecurityConfiguration
 
     @Bean
     public UserDetailsManager userDetailsManager() {
+        //создание и сохранение в БД тестовых пользователей
         UserEntity admin = new UserEntity();
         admin.setLogin("admin");
         admin.setPassword("{noop}admin");
