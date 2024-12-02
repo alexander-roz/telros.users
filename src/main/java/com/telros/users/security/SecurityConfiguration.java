@@ -17,9 +17,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @EnableWebSecurity
@@ -84,7 +88,15 @@ public class SecurityConfiguration
         admin.setSurname("Admin");
         userService.addUser(admin);
 
-        return new InMemoryUserDetailsManager(admin);
+        UserEntity user = new UserEntity();
+        user.setLogin("user");
+        user.setPassword("{noop}user");
+        user.setRole(UserEntityRole.ROLE_USER);
+        user.setName("User");
+        user.setSurname("User");
+        userService.addUser(user);
+
+        return new InMemoryUserDetailsManager(admin, user);
     }
 
 }

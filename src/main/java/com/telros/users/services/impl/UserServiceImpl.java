@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return found;
     }
 
+    @Override
     public Request deleteUser(UserEntity user) {
         if (userEntityRepository.existsById(user.getId())) {
             userEntityRepository.delete(user);

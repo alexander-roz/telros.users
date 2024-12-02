@@ -1,6 +1,7 @@
 package com.telros.users.services;
 
 import com.telros.users.data.entities.UserEntity;
+import com.telros.users.dto.Request;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,4 +22,6 @@ public interface UserService {
     public Page<UserEntity> list(Pageable pageable);
 
     UserEntity findUserByLogin(String login);
+
+    public Request deleteUser(UserEntity user);
 }
