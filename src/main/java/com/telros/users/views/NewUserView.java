@@ -5,6 +5,8 @@ import com.telros.users.data.entities.UserEntityRole;
 import com.telros.users.services.RegexService;
 import com.telros.users.services.UserService;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -16,6 +18,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
@@ -24,6 +27,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.RolesAllowed;
+import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +60,7 @@ public class NewUserView extends Composite<VerticalLayout> {
                 .show("Для добавления пользователя - заполните данные. \n" +
                         "Обязательные поля: логин, пароль, имя, фамилия");
         notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+        notification.setPosition(Notification.Position.TOP_CENTER);
         notification.setDuration(10000);
 
         this.userService = userService;
@@ -197,7 +202,8 @@ public class NewUserView extends Composite<VerticalLayout> {
         if(login.isEmpty()||password.isEmpty()||name.isEmpty()||surname.isEmpty()) {
             Notification notification = Notification
                     .show("Заполните данные: логин, пароль, имя, фамилия");
-            notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+            notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+            notification.setPosition(Notification.Position.TOP_CENTER);
         }
         else {
             user.setLogin(login);
@@ -209,7 +215,8 @@ public class NewUserView extends Composite<VerticalLayout> {
             if(RegexService.phoneNumberRefactor(phone).equals("Неверный формат номера")){
                 Notification notification = Notification
                         .show("Введен неверный формат номера телефона");
-                notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                notification.setPosition(Notification.Position.TOP_CENTER);
             }else {
                 user.setPhone(RegexService.phoneNumberRefactor(phone));
             }
@@ -226,12 +233,16 @@ public class NewUserView extends Composite<VerticalLayout> {
             if (userService.checkTheLogin(user)) {
                 Notification notification = Notification
                         .show("Пользователь с данным логином уже внесен!");
-                notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.setPosition(Notification.Position.BOTTOM_CENTER);
             } else {
                 userService.addUser(user);
                 Notification notification = Notification
                         .show("Данные пользователя сохранены");
-                notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notification.setPosition(Notification.Position.TOP_CENTER);
+
+                UI.getCurrent().getPage().reload();
             }
         }
     }

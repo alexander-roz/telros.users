@@ -82,7 +82,7 @@ public class SecurityConfiguration
     public UserDetailsManager userDetailsManager() {
         UserEntity admin = new UserEntity();
         admin.setLogin("admin");
-        admin.setPassword("{noop}pass");
+        admin.setPassword("{noop}admin");
         admin.setRole(UserEntityRole.ROLE_ADMIN);
         admin.setName("Admin");
         admin.setSurname("Admin");

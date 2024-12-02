@@ -11,11 +11,9 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
-import com.vaadin.flow.component.grid.FooterRow;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -27,7 +25,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.security.RolesAllowed;
 
-import java.util.Collection;
 import java.util.List;
 
 @PageTitle("Users")
@@ -82,11 +79,6 @@ public class MainView extends Div {
         String login = securityService.getAuthenticatedUser().getUsername();
         UserEntity user = userService.findUserByLogin(login);
 
-        Notification notification = Notification
-                .show("Вход совершен пользователем " + login);
-        notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
-        notification.setDuration(10000);
-
         //добавление функций администратора, в случае наличия прав пользователя
         if(user.getRole().equals(UserEntityRole.ROLE_ADMIN)){
             grid.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -107,7 +99,8 @@ public class MainView extends Div {
                         userService.deleteUser(item);
                         Notification notification = Notification
                                 .show("Пользователь " + item.getLogin() + " удален");
-                        notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                        notification.setPosition(Notification.Position.TOP_CENTER);
                         notification.setDuration(10000);
                         UI.getCurrent().getPage().reload();
                     }

@@ -13,6 +13,7 @@ import com.vaadin.flow.spring.security.AuthenticationContext;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver{
     private final LoginForm login = new LoginForm();
     private final transient AuthenticationContext authContext;
+    public static int notificationCounter;
 
     public LoginView(AuthenticationContext authContext){
         this.authContext = authContext;
@@ -23,6 +24,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver{
         setJustifyContentMode(JustifyContentMode.CENTER);
         login.setAction("login");
         add(new H1("Telros users"), login);
+        notificationCounter = 1;
     }
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
