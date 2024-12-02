@@ -1,6 +1,5 @@
 package com.telros.users.views;
 
-import com.telros.users.UsersApplication;
 import com.telros.users.data.entities.UserEntityRole;
 import com.telros.users.security.SecurityService;
 import com.telros.users.services.UserService;
